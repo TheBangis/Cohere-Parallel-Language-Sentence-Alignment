@@ -1,8 +1,10 @@
 import streamlit as st
 import subprocess
+import os
 
 st.title("Cohere-Parallel-Language-Sentence-Alignment Demo")
-
+# getting the API key
+cohere_api_key = os.environ["COHERE_API_KEY"]
 # Upload source and target files
 src_file = st.file_uploader("Upload source file", type=["txt"])
 trg_file = st.file_uploader("Upload target file", type=["txt"])
