@@ -32,8 +32,7 @@ if st.button("Align"):
             "-t", "trg.txt",
             "-o", "cohere",
             "--retrieval", "nn",
-            "--dot",
-            "--cuda"
+            "--dot"
         ]
 
         result = subprocess.run(command, capture_output=True, text=True)
