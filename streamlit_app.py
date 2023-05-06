@@ -2,7 +2,7 @@ import streamlit as st
 import subprocess
 import os
 
-st.title("Cohere-Parallel-Language-Sentence-Alignment Demo")
+st.title("Cohere-Parallel-Language-Sentence-Alignment")
 
 # getting the API key
 cohere_api_key = os.environ["COHERE_API_KEY"]
