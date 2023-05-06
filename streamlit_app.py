@@ -1,6 +1,7 @@
 import streamlit as st
 import subprocess
 import os
+import pandas as pd
 
 st.title("Cohere-Parallel-Language-Sentence-Alignment Demo")
 # getting the API key
@@ -38,3 +39,18 @@ if st.button("Align"):
         # Display the alignment output
         st.header("Alignment Output")
         st.text(result.stdout)
+        
+        # Generate a dataframe from the output
+        df = pd.DataFrame([x.split() for x in result.stdout.split('\n') if x])
+        st.write("Alignment Output as Dataframe")
+        st.dataframe(df)
+        
+        # Download the output as txt
+        if st.button("Download output as txt"):
+            output = result.stdout.encode('utf-8')
+            st.download_button(
+                label="Download output as txt",
+                data=output,
+                file_name="alignment_output.txt",
+                mime="text/plain"
+            )
