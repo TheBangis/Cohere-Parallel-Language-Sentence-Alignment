@@ -1,11 +1,12 @@
 import streamlit as st
 import subprocess
 import os
-import pandas as pd
 
 st.title("Cohere-Parallel-Language-Sentence-Alignment Demo")
+
 # getting the API key
 cohere_api_key = os.environ["COHERE_API_KEY"]
+
 # Upload source and target files
 src_file = st.file_uploader("Upload source file", type=["txt"])
 trg_file = st.file_uploader("Upload target file", type=["txt"])
@@ -20,12 +21,12 @@ if st.button("Align"):
             f.write(src_file.read())
         with open("trg.txt", "wb") as f:
             f.write(trg_file.read())
-        
+
         # Run the aligner command
         command = [
             "python3",
             "scripts/cohere_align.py",
-            "--cohere_api_key", "<api_key>",
+            "--cohere_api_key", cohere_api_key,
             "-m", "embed-multilingual-v2.0",
             "-s", "src.txt",
             "-t", "trg.txt",
@@ -34,23 +35,17 @@ if st.button("Align"):
             "--dot",
             "--cuda"
         ]
+
         result = subprocess.run(command, capture_output=True, text=True)
-        
-        # Display the alignment output
+
+        # Display the alignment output as a dataframe and a download link
+        output_lines = result.stdout.strip().split("\n")
+        output_data = [line.strip().split("\t") for line in output_lines]
         st.header("Alignment Output")
-        st.text(result.stdout)
-        
-        # Generate a dataframe from the output
-        df = pd.DataFrame([x.split() for x in result.stdout.split('\n') if x])
-        st.write("Alignment Output as Dataframe")
-        st.dataframe(df)
-        
-        # Download the output as txt
-        if st.button("Download output as txt"):
-            output = result.stdout.encode('utf-8')
-            st.download_button(
-                label="Download output as txt",
-                data=output,
-                file_name="alignment_output.txt",
-                mime="text/plain"
-            )
+        st.dataframe(output_data)
+        st.download_button(
+            label="Download Output as TXT",
+            data="\n".join(result.stdout),
+            file_name="alignment_output.txt",
+            mime="text/plain"
+        )
