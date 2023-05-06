@@ -1,7 +1,5 @@
 streamlit
 pip==23.1.2
-collections==0.1.2
-argparse==1.4.0
 numpy
 pandas
 sys
